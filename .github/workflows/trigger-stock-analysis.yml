@@ -1,0 +1,21 @@
+name: 触发股票分析
+
+on:
+  schedule:
+    - cron: '35 7 * * 1-5'     # 北京时间 15:35，周一至周五
+  workflow_dispatch:
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 触发旧仓库的分析 workflow
+        run: |
+          echo "🚀 触发 xia950704/daily_stock_analysis 的每日分析..."
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.GH_PAT }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Content-Type: application/json" \
+            -d '{"ref": "main"}' \
+            https://api.github.com/repos/xia950704/daily_stock_analysis/actions/workflows/00-daily-analysis.yml/dispatches
+        shell: bash
